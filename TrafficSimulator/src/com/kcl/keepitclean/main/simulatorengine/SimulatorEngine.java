@@ -26,6 +26,7 @@ import com.kcl.keepitclean.main.GUI.SimulationSettings;
 import com.kcl.keepitclean.main.policy.Policy;
 import com.kcl.keepitclean.main.roadnetwork.junction.Junction;
 import com.kcl.keepitclean.main.roadnetwork.junction.TrafficLight;
+import com.kcl.keepitclean.main.roadnetwork.junction.TrafficLight.State;
 import com.kcl.keepitclean.main.roadnetwork.laneSection.LaneSection;
 import com.kcl.keepitclean.main.roadnetwork.road.ListOfListsRoadImpl;
 import com.kcl.keepitclean.main.roadnetwork.road.Road;
@@ -301,8 +302,18 @@ public class SimulatorEngine implements Observer {
 
 			// if car is at the end of the road and theres a junction upcoming
 			if (reachedEnd(vehicleList.get(i)) && roadList.get(roadIndex).hasJunction()) {
+				
+				
 				Junction junc;
 				junc = roadList.get(roadIndex).getEndJunction();
+				TrafficLight trafficlight= context.getTrafficLight(roadList.get(roadIndex), junc);
+				
+				//if theres a traffic Light Stop, otherwise move.
+				//TODO: more complex traffic light behaviour
+				if (trafficlight!= null && trafficlight.getState()== State.RED ){
+					continue;
+					
+				}
 
 				List<LaneSection> path = new ArrayList<>();
 				Point randPoint = junc.getRandomExitPoint();
